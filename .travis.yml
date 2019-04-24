@@ -3,24 +3,24 @@ services:
   - docker
 
 before_install:
-  - docker build -t nihit/multi-dock -f ./client/Dockerfile.dev ./client
+  - docker build -t nihitx/multi-dock -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run nihit/multi-dock npm test -- --coverage
+  - docker run nihitx/multi-dock npm test -- --coverage
 
 after_success:
-  - docker build -t nihit/multi-client ./client
-  - docker build -t nihit/multi-nginx ./nginx
-  - docker build -t nihit/multi-server ./server
-  - docker build -t nihit/multi-worker ./worker
+  - docker build -t nihitx/multi-client ./client
+  - docker build -t nihitx/multi-nginx ./nginx
+  - docker build -t nihitx/multi-server ./server
+  - docker build -t nihitx/multi-worker ./worker
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take those images and push them to docker hub
-  - docker push nihit/multi-client
-  - docker push nihit/multi-nginx
-  - docker push nihit/multi-server
-  - docker push nihit/multi-worker
-#retry
+  - docker push nihitx/multi-client
+  - docker push nihitx/multi-nginx
+  - docker push nihitx/multi-server
+  - docker push nihitx/multi-worker
+
 #deploy:
 #  provider: elasticbeanstalk
 #  region: eu-west-3
