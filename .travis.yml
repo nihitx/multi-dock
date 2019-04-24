@@ -20,7 +20,7 @@ after_success:
   - docker push nihit/multi-nginx
   - docker push nihit/multi-server
   - docker push nihit/multi-worker
-
+#retry
 #deploy:
 #  provider: elasticbeanstalk
 #  region: eu-west-3
