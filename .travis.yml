@@ -1,0 +1,35 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t nihit/multi-dock -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run nihit/multi-dock npm test -- --coverage
+
+after_success:
+  - docker build -t nihit/multi-client ./client
+  - docker build -t nihit/multi-nginx ./nginx
+  - docker build -t nihit/multi-server ./server
+  - docker build -t nihit/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push nihit/multi-client
+  - docker push nihit/multi-nginx
+  - docker push nihit/multi-server
+  - docker push nihit/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: eu-west-3
+  app: multi-docker
+  env: MultiDocker-env-1
+  bucket_name: elasticbeanstalk-eu-west-3-246681470423
+  bucket_path: docker-multi
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
